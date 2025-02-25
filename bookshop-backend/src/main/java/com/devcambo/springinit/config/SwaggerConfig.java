@@ -13,7 +13,7 @@ import io.swagger.v3.oas.annotations.servers.Server;
 
 @OpenAPIDefinition(
   info = @Info(
-    title = "Spring Init API Documentation",
+    title = "Book Shop API Documentation",
     description = "Spring Init API Documentation",
     version = "v1",
     contact = @Contact(

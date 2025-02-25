@@ -5,6 +5,8 @@ import com.devcambo.springinit.model.enums.Gender;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Setter
 @Getter
 @NoArgsConstructor
@@ -34,4 +36,8 @@ public class User extends BaseEntity {
 
   @Column(name = "roles", nullable = false)
   private String roles;
+
+  @OneToMany(mappedBy = "user")
+  private List<Order> orders;
+
 }
