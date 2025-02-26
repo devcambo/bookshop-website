@@ -14,7 +14,6 @@ public interface BookMapper {
 
   BookResponseDto toDto(Book book);
 
-
   Book toEntity(BookCreationDto bookCreationDto);
 
   @Mappings(

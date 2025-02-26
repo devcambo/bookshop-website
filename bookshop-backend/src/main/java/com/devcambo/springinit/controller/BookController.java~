@@ -102,10 +102,10 @@ public class BookController {
                     required = false,
                     defaultValue = "10"
             ) @Min(1) @Max(100) Integer pageSize,
-            @Parameter(description = "Sort by field (id, title)", example = "id") @RequestParam(
+            @Parameter(description = "Sort by field (bookId, title)", example = "bookId") @RequestParam(
                     value = "sortBy",
                     required = false,
-                    defaultValue = "id"
+                    defaultValue = "bookId"
             ) String sortBy,
             @Parameter(description = "Sort direction (ASC/DESC)", example = "ASC") @RequestParam(
                     value = "sortDir",

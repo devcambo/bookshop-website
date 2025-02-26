@@ -1,9 +1,16 @@
 package com.devcambo.springinit.model.dto.response;
 
+import java.math.BigDecimal;
+import java.sql.Date;
+
 public record BookResponseDto(
-  Long bookId,
+  Long id,
   String title,
   String author,
+  String publisher,
+  Date publicationDate,
+  String isbn,
+  BigDecimal price,
   String description,
-  Double price
+  String imageUrl
 ) {}

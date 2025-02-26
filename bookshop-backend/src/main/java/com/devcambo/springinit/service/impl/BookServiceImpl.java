@@ -79,6 +79,6 @@ public class BookServiceImpl implements BookService {
   }
 
   private boolean isValidSortField(String field) {
-    return Arrays.asList("bookId", "title", "author").contains(field);
+    return Arrays.asList("id", "title", "author").contains(field);
   }
 }
