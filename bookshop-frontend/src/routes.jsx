@@ -6,11 +6,13 @@ import NotFoundPage from './pages/NotFoundPage';
 import PrivateRoute from './components/PrivateRoute';
 import MainLayout from './components/MainLayout';
 import AuthLayout from './components/AuthLayout';
-import DashboardLayout from './components/DashboardLayout';
 import DashboardPage from './pages/DashboardPage';
 import BooksPage from './pages/BooksPage';
 import BookPage from './pages/BookPage';
 import AboutPage from './pages/AboutPage';
+import ManageUsers from './components/ManageUsers';
+import ManageBooks from './components/ManageBooks';
+import Settings from './components/Settings';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -35,8 +37,11 @@ const AppRoutes = () => {
 
           {/* DashboardLayout && PrivateRoute */}
           <Route element={<PrivateRoute />}>
-            <Route element={<DashboardLayout />}>
-              <Route path="/dashboard" element={<DashboardPage />} />
+            <Route path="/dashboard" element={<DashboardPage />}>
+              <Route index element={<ManageUsers />} />
+              <Route path="users" element={<ManageUsers />} />
+              <Route path="books" element={<ManageBooks />} />
+              <Route path="settings" element={<Settings />} />
             </Route>
           </Route>
 

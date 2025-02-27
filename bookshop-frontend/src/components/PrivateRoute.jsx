@@ -1,9 +1,12 @@
-import React from 'react'
+import React from 'react';
+import { Outlet } from 'react-router-dom';
 
 const PrivateRoute = () => {
   return (
-    <div>PrivateRoute</div>
-  )
-}
+    <>
+      <Outlet />
+    </>
+  );
+};
 
-export default PrivateRoute
+export default PrivateRoute;
