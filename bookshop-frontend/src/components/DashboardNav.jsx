@@ -1,8 +1,10 @@
 import React from 'react';
-import { Container, Row, Col, Nav, Navbar, Dropdown } from 'react-bootstrap';
-import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { Container, Nav, Navbar, Dropdown } from 'react-bootstrap';
+import { Link, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 const DashboardNav = () => {
+  const navigate = useNavigate();
   const logout = () => {
     localStorage.removeItem('token');
     toast.success('Logout successful!');

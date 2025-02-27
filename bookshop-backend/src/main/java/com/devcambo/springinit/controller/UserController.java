@@ -121,7 +121,7 @@ public class UserController {
   ) {
     return ResponseEntity
       .ok()
-      .cacheControl(CacheControl.maxAge(30, TimeUnit.SECONDS))
+      //.cacheControl(CacheControl.maxAge(30, TimeUnit.SECONDS))
       .body(
         new APIResponse(
           true,

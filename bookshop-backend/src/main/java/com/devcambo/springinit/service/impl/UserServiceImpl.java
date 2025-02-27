@@ -54,6 +54,7 @@ public class UserServiceImpl implements UserService {
   @Override
   public UserResponseDto create(UserCreationDto userCreationDto) {
     User user = userMapper.toEntity(userCreationDto);
+    user.setRoles("ADMIN");
     User savedUser = userRepo.save(user);
     return userMapper.toDto(savedUser);
   }
