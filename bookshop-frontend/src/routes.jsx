@@ -11,6 +11,8 @@ import DashboardPage from './pages/DashboardPage';
 import BooksPage from './pages/BooksPage';
 import BookPage from './pages/BookPage';
 import AboutPage from './pages/AboutPage';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const AppRoutes = () => {
   return (
@@ -42,6 +44,7 @@ const AppRoutes = () => {
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </BrowserRouter>
+      <ToastContainer />
     </>
   );
 };

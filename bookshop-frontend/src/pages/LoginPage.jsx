@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Container, Form, Button, Card } from 'react-bootstrap';
 import { login } from '../api/authAPI';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 const LoginPage = () => {
   const [formData, setFormData] = useState({
@@ -23,11 +24,23 @@ const LoginPage = () => {
     e.preventDefault();
     try {
       const response = await login(formData);
-      localStorage.setItem('token', response.data.jwt_token);
-      navigate('/dashboard');
+      localStorage.setItem('token', response.data.data.jwt_token);
+      toast.success(response.data.message || 'Login successful!');
+      navigate('/');
     } catch (error) {
-      console.error('Registration failed:', error.response?.data || error.message);
+      toast.error(error.response?.data?.message || error.message || 'Login failed');
+    } finally {
+      clearForm();
     }
+  };
+
+  const clearForm = () => {
+    setFormData({
+      username: '',
+      email: '',
+      password: '',
+      gender: 'OTHER',
+    });
   };
 
   return (

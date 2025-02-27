@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Container, Form, Button, Card } from 'react-bootstrap';
 import { register } from '../api/authAPI';
 import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 
 const RegisterPage = () => {
   const [formData, setFormData] = useState({
@@ -10,6 +11,8 @@ const RegisterPage = () => {
     password: '',
     gender: 'OTHER',
   });
+
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -23,11 +26,23 @@ const RegisterPage = () => {
     e.preventDefault();
     try {
       const response = await register(formData);
-      localStorage.setItem('token', response.data.jwt_token);
-      toast.success(response.message);
+      localStorage.setItem('token', response.data.data.jwt_token);
+      toast.success(response.data.message || 'Registration successful!');
+      navigate('/');
     } catch (error) {
-      console.error('Registration failed:', error.response?.data || error.message);
+      toast.error(error.response?.data?.message || error.message || 'Registration failed');
+    } finally {
+      clearForm();
     }
+  };
+
+  const clearForm = () => {
+    setFormData({
+      username: '',
+      email: '',
+      password: '',
+      gender: 'OTHER',
+    });
   };
 
   return (
