@@ -1,6 +1,12 @@
 package com.devcambo.springinit.constant;
 
+import java.util.Map;
+import java.util.Set;
+
 public final class JWTConstant {
+  public static final Map<String, Set<String>> PERMITTED_ENDPOINTS = Map.of("/api/auth/**", Set.of("ALL"),
+          "/api/books/**", Set.of("GET")
+  );
 
   public static final String JWT_TOKEN_HEADER = "Authorization";
   public static final String JWT_TOKEN_PREFIX = "Bearer ";

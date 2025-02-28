@@ -10,6 +10,9 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Map;
+import java.util.Set;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -18,6 +21,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
+import org.springframework.util.PathMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 @Component
@@ -26,14 +30,24 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
   private final JwtService jwtService;
   private final UserInfoService userDetailsService;
+  private final PathMatcher pathMatcher;
 
   @Override
   protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-    // TODO: implement logic to filter out for all endpoints that don't require authentication
-    return (
-      request.getServletPath().equals("/api/auth/login") ||
-      request.getServletPath().equals("/api/auth/register")
-    );
+    String requestPath = request.getServletPath();
+    String requestMethod = request.getMethod();
+
+    for (Map.Entry<String, Set<String>> entry : JWTConstant.PERMITTED_ENDPOINTS.entrySet()) {
+      String pathPattern = entry.getKey();
+      Set<String> allowedMethods = entry.getValue();
+      if (pathMatcher.match(pathPattern, requestPath)) {
+        if (allowedMethods.contains("ALL") || allowedMethods.contains(requestMethod)) {
+          return true;
+        }
+      }
+    }
+
+    return false;
   }
 
   @Override

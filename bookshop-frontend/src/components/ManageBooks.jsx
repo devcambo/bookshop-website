@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Table, Button, Pagination, Modal, Form } from 'react-bootstrap';
 import { addBook, getBooks, updateBook, deleteBook } from '../api/bookAPI';
 import { toast } from 'react-toastify';
+import { uploadFile } from '../api/fileAPI';
 
 const ManageBooks = () => {
   const [books, setBooks] = useState([]);
@@ -9,6 +10,7 @@ const ManageBooks = () => {
   const [totalPages, setTotalPages] = useState(0);
   const [loading, setLoading] = useState(false);
   const pageSize = 10;
+  const fileBaseUrl = import.meta.env.VITE_FILE_URL;
 
   const [showModal, setShowModal] = useState(false);
   const [newBook, setNewBook] = useState({
@@ -21,6 +23,7 @@ const ManageBooks = () => {
     description: '',
     imageUrl: '',
   });
+  const [newBookFile, setNewBookFile] = useState(null);
 
   const [showEditModal, setShowEditModal] = useState(false);
   const [editBook, setEditBook] = useState({
@@ -34,16 +37,16 @@ const ManageBooks = () => {
     description: '',
     imageUrl: '',
   });
+  const [editBookFile, setEditBookFile] = useState(null);
 
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleteBookId, setDeleteBookId] = useState(null);
 
-  // Fetch books with pagination
   const fetchBooks = async (page) => {
     setLoading(true);
     try {
       const response = await getBooks(page, pageSize, 'id', 'DESC');
-      const { data } = response.data; // Matches your response structure
+      const { data } = response.data;
       setBooks(data.content);
       setTotalPages(data.page.totalPages);
     } catch (error) {
@@ -57,7 +60,13 @@ const ManageBooks = () => {
   const handleAddBook = async (e) => {
     e.preventDefault();
     try {
-      const response = await addBook(newBook);
+      let imageUrl = newBook.imageUrl;
+      if (newBookFile) {
+        const uploadResponse = await uploadFile(newBookFile);
+        imageUrl = uploadResponse.data.data; // Adjust based on your API response
+      }
+      const bookData = { ...newBook, imageUrl };
+      const response = await addBook(bookData);
       await fetchBooks(currentPage);
       toast.success(response.data.message || 'Book added successfully');
     } catch (error) {
@@ -74,6 +83,7 @@ const ManageBooks = () => {
         description: '',
         imageUrl: '',
       });
+      setNewBookFile(null); // Reset file
     }
   };
 
@@ -81,7 +91,13 @@ const ManageBooks = () => {
   const handleEditBook = async (e) => {
     e.preventDefault();
     try {
-      const response = await updateBook(editBook.id, editBook);
+      let imageUrl = editBook.imageUrl;
+      if (editBookFile) {
+        const uploadResponse = await uploadFile(editBookFile);
+        imageUrl = uploadResponse.data.data; // Adjust based on your API response
+      }
+      const bookData = { ...editBook, imageUrl };
+      const response = await updateBook(editBook.id, bookData);
       await fetchBooks(currentPage);
       toast.success(response.data.message || 'Book updated successfully');
     } catch (error) {
@@ -99,6 +115,7 @@ const ManageBooks = () => {
         description: '',
         imageUrl: '',
       });
+      setEditBookFile(null); // Reset file
     }
   };
 
@@ -132,6 +149,16 @@ const ManageBooks = () => {
   const handleInputChange = (e, setBookFn) => {
     const { name, value } = e.target;
     setBookFn((prev) => ({ ...prev, [name]: value }));
+  };
+
+  // Handle file input changes
+  const handleFileChange = (e, setFileFn, setBookFn) => {
+    const file = e.target.files[0];
+    if (file) {
+      setFileFn(file);
+      const previewUrl = URL.createObjectURL(file); // Preview locally
+      setBookFn((prev) => ({ ...prev, imageUrl: previewUrl }));
+    }
   };
 
   // Open edit modal with book data
@@ -183,9 +210,13 @@ const ManageBooks = () => {
                     <td>{book.publicationDate}</td>
                     <td>{book.isbn}</td>
                     <td>${book.price}</td>
-                    <td>{book.description}</td>
+                    <td>{book.description.substring(0, 10) + '...'}</td>
                     <td>
-                      <img src={book.imageUrl} alt={book.title} style={{ width: '50px' }} />
+                      <img
+                        src={`${fileBaseUrl}/${book.imageUrl}`}
+                        alt={book.title}
+                        style={{ width: '50px' }}
+                      />
                     </td>
                     <td>
                       <Button
@@ -216,7 +247,6 @@ const ManageBooks = () => {
             </tbody>
           </Table>
 
-          {/* Pagination */}
           {totalPages > 1 && (
             <Pagination className="justify-content-center mt-3">
               <Pagination.First onClick={() => handlePageChange(0)} disabled={currentPage === 0} />
@@ -325,15 +355,21 @@ const ManageBooks = () => {
                 required
               />
             </Form.Group>
-            <Form.Group className="mb-3" controlId="imageUrl">
-              <Form.Label>Image URL</Form.Label>
+            <Form.Group className="mb-3" controlId="imageFile">
+              <Form.Label>Book Image</Form.Label>
               <Form.Control
-                type="url"
-                name="imageUrl"
-                value={newBook.imageUrl}
-                onChange={(e) => handleInputChange(e, setNewBook)}
-                required
+                type="file"
+                accept="image/*"
+                onChange={(e) => handleFileChange(e, setNewBookFile, setNewBook)}
+                required={!newBook.imageUrl} // Required if no image yet
               />
+              {newBook.imageUrl && (
+                <img
+                  src={newBook.imageUrl}
+                  alt="Preview"
+                  style={{ width: '100px', marginTop: '10px' }}
+                />
+              )}
             </Form.Group>
             <Button variant="primary" type="submit">
               Save Book
@@ -422,15 +458,20 @@ const ManageBooks = () => {
                   required
                 />
               </Form.Group>
-              <Form.Group className="mb-3" controlId="edit-imageUrl">
-                <Form.Label>Image URL</Form.Label>
+              <Form.Group className="mb-3" controlId="edit-imageFile">
+                <Form.Label>Book Image</Form.Label>
                 <Form.Control
-                  type="url"
-                  name="imageUrl"
-                  value={editBook.imageUrl}
-                  onChange={(e) => handleInputChange(e, setEditBook)}
-                  required
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => handleFileChange(e, setEditBookFile, setEditBook)}
                 />
+                {editBook.imageUrl && (
+                  <img
+                    src={`${fileBaseUrl}/${editBook.imageUrl}`}
+                    alt="Preview"
+                    style={{ width: '100px', marginTop: '10px' }}
+                  />
+                )}
               </Form.Group>
               <Button variant="primary" type="submit">
                 Update Book

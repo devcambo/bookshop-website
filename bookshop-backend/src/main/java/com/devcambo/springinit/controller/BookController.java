@@ -115,7 +115,7 @@ public class BookController {
     ) {
         return ResponseEntity
                 .ok()
-                .cacheControl(CacheControl.maxAge(30, TimeUnit.SECONDS))
+                /*.cacheControl(CacheControl.maxAge(30, TimeUnit.SECONDS))*/
                 .body(
                         new APIResponse(
                                 true,
@@ -191,11 +191,11 @@ public class BookController {
     @GetMapping("/{bookId}")
     public ResponseEntity<APIResponse> findBookById(@PathVariable Long bookId) {
         return ResponseEntity
-                .status(HttpStatus.FOUND)
+                .status(HttpStatus.OK)
                 .body(
                         new APIResponse(
                                 true,
-                                StatusCode.FOUND,
+                                StatusCode.OK,
                                 "Retrieved book successfully",
                                 bookService.readById(bookId)
                         )

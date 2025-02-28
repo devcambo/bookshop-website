@@ -13,12 +13,14 @@ import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class StorageServiceImpl implements StorageService {
 
   private final S3Template s3Template;
@@ -44,7 +46,9 @@ public class StorageServiceImpl implements StorageService {
         .contentLength(multipartFile.getSize())
         .build();
       InputStream inputStream = multipartFile.getInputStream();
-      s3Template.upload(StorageConstant.BUCKET_NAME, key, inputStream, metadata);
+      var result = s3Template.upload(StorageConstant.BUCKET_NAME, key, inputStream, metadata);
+      /*log.info("Get location: {}", result.getLocation());
+      log.info("Get URL: {}", result.getURL());*/
       return key;
     } catch (Exception e) {
       throw new S3Exception(e.getMessage(), e.getCause().getCause());
