@@ -1,10 +1,26 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Container, Nav, Navbar, Dropdown } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { getProfile } from '../api/userAPI';
 
 const DashboardNav = () => {
+  const [profile, setProfile] = useState({});
   const navigate = useNavigate();
+
+  const fetchProfile = async () => {
+    try {
+      const response = await getProfile();
+      setProfile(response.data.data);
+    } catch (error) {
+      toast.error(error.response?.data?.message || error.message || 'Failed to fetch profile');
+    }
+  };
+
+  useEffect(() => {
+    fetchProfile();
+  }, []);
+
   const logout = () => {
     localStorage.removeItem('token');
     toast.success('Logout successful!');
@@ -22,8 +38,7 @@ const DashboardNav = () => {
           <Nav className="ms-auto">
             <Dropdown align="end">
               <Dropdown.Toggle variant="dark" id="dropdown-basic">
-                {/* {currentUser.name} */}
-                Admin
+                {profile?.username || 'No User'}
               </Dropdown.Toggle>
               <Dropdown.Menu>
                 <Dropdown.Item disabled>Admin</Dropdown.Item>

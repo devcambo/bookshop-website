@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -22,6 +23,7 @@ public class UserServiceImpl implements UserService {
 
   private final UserRepo userRepo;
   private final UserMapper userMapper;
+  private final PasswordEncoder passwordEncoder;
 
   @Override
   public Page<UserResponseDto> readAll(
@@ -55,6 +57,7 @@ public class UserServiceImpl implements UserService {
   public UserResponseDto create(UserCreationDto userCreationDto) {
     User user = userMapper.toEntity(userCreationDto);
     user.setRoles("ADMIN");
+    user.setPassword(passwordEncoder.encode(user.getPassword()));
     User savedUser = userRepo.save(user);
     return userMapper.toDto(savedUser);
   }
@@ -71,6 +74,13 @@ public class UserServiceImpl implements UserService {
   public void delete(Long userId) {
     User idToDelete = getUserById(userId);
     userRepo.deleteById(idToDelete.getUserId());
+  }
+
+  @Override
+  public UserResponseDto profile(String email) {
+    User user = userRepo.findByEmail(email)
+            .orElseThrow(() -> new ResourceNotFoundException("profile", email));
+    return userMapper.toDto(user);
   }
 
   private User getUserById(Long userId) {

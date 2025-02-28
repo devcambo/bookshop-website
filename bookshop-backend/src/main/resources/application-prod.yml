@@ -7,5 +7,6 @@ spring:
     username: "${JDBC_DATABASE_USERNAME:admin}"
     password: "${JDBC_DATABASE_PASSWORD:admin}"
   jpa:
+    open-in-view: "false"
     hibernate:
       ddl-auto: "update"

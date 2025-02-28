@@ -53,4 +53,6 @@ public interface UserService {
    * @param userId The ID of the user to delete.
    */
   void delete(Long userId);
+
+    UserResponseDto profile(String email);
 }

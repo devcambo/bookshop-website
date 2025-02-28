@@ -37,10 +37,10 @@ public class Book {
   @Column(name = "price")
   private BigDecimal price;
 
-  @Column(name = "description")
+  @Column(name = "description", columnDefinition = "TEXT")
   private String description;
 
-  @Column(name = "image_url")
+  @Column(name = "image_url", length = 500)
   private String imageUrl;
 
 }

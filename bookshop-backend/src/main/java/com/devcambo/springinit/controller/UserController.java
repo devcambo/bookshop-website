@@ -5,6 +5,7 @@ import com.devcambo.springinit.model.base.APIResponse;
 import com.devcambo.springinit.model.base.ErrorInfo;
 import com.devcambo.springinit.model.dto.request.UserCreationDto;
 import com.devcambo.springinit.model.dto.request.UserUpdateDto;
+import com.devcambo.springinit.model.dto.response.UserResponseDto;
 import com.devcambo.springinit.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -23,6 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -425,5 +427,12 @@ public class UserController {
     return ResponseEntity
       .status(HttpStatus.NO_CONTENT)
       .body(new APIResponse(true, StatusCode.NO_CONTENT, "User deleted successfully"));
+  }
+
+  @GetMapping("/profile")
+    public ResponseEntity<APIResponse> findUserProfile(Authentication authentication) {
+      return ResponseEntity
+              .status(HttpStatus.OK)
+              .body(new APIResponse(true, StatusCode.OK, "Retrieved profile successfully",  userService.profile(authentication.getName())));
   }
 }
