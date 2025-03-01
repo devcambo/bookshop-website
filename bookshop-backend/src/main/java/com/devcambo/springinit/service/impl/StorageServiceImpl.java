@@ -44,9 +44,15 @@ public class StorageServiceImpl implements StorageService {
       ObjectMetadata metadata = new ObjectMetadata.Builder()
         .contentType(multipartFile.getContentType())
         .contentLength(multipartFile.getSize())
+        .acl("public-read")
         .build();
       InputStream inputStream = multipartFile.getInputStream();
-      var result = s3Template.upload(StorageConstant.BUCKET_NAME, key, inputStream, metadata);
+      var result = s3Template.upload(
+        StorageConstant.BUCKET_NAME,
+        key,
+        inputStream,
+        metadata
+      );
       /*log.info("Get location: {}", result.getLocation());
       log.info("Get URL: {}", result.getURL());*/
       return key;

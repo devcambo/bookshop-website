@@ -6,7 +6,6 @@ import com.devcambo.springinit.model.dto.response.BookResponseDto;
 import org.springframework.data.domain.Page;
 
 public interface BookService {
-
   /**
    * Retrieves a paginated list of all books.
    *

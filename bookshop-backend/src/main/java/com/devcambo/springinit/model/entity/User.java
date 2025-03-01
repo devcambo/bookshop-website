@@ -3,9 +3,8 @@ package com.devcambo.springinit.model.entity;
 import com.devcambo.springinit.model.base.BaseEntity;
 import com.devcambo.springinit.model.enums.Gender;
 import jakarta.persistence.*;
-import lombok.*;
-
 import java.util.List;
+import lombok.*;
 
 @Setter
 @Getter
@@ -39,5 +38,4 @@ public class User extends BaseEntity {
 
   @OneToMany(mappedBy = "user")
   private List<Order> orders;
-
 }

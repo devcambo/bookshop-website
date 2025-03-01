@@ -11,16 +11,10 @@ import org.mapstruct.Mappings;
 
 @Mapper(componentModel = "spring")
 public interface OrderMapper {
-
   OrderResponseDto toDto(Order order);
-
 
   Order toEntity(OrderCreationDto orderCreationDto);
 
-  @Mappings(
-    {
-      @Mapping(target = "id", ignore = true),
-    }
-  )
+  @Mappings({ @Mapping(target = "id", ignore = true) })
   void updateFromDto(OrderUpdateDto dto, @MappingTarget Order entity);
 }

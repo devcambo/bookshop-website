@@ -34,382 +34,393 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 public class BookController {
 
-    private final BookService bookService;
+  private final BookService bookService;
 
-    @Operation(
-            summary = "Find All Books REST API",
-            description = "REST API to find all books with pagination and sorting options"
-    )
-    @ApiResponses({
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "HTTP Status OK",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = APIResponse.class)
-                    )
-            ),
-            @ApiResponse(
-                    responseCode = "400",
-                    description = "Invalid request parameters or body",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = ErrorInfo.class)
-                    )
-            ),
-            @ApiResponse(
-                    responseCode = "401",
-                    description = "Unauthorized",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = ErrorInfo.class)
-                    )
-            ),
-            @ApiResponse(
-                    responseCode = "403",
-                    description = "Forbidden",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = ErrorInfo.class)
-                    )
-            ),
-            @ApiResponse(
-                    responseCode = "405",
-                    description = "This http method is not allowed for this API endpoint",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = ErrorInfo.class)
-                    )
-            ),
-            @ApiResponse(
-                    responseCode = "500",
-                    description = "HTTP Status Internal Server Error",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = ErrorInfo.class)
-                    )
-            ),
-    })
-    @GetMapping
-    public ResponseEntity<APIResponse> findAllBooks(
-            @Parameter(description = "Zero-based offset index", example = "0") @RequestParam(
-                    value = "offset",
-                    required = false,
-                    defaultValue = "0"
-            ) @Min(0) Integer offset,
-            @Parameter(description = "Number of items per page (1-100)", example = "10") @RequestParam(
-                    value = "pageSize",
-                    required = false,
-                    defaultValue = "10"
-            ) @Min(1) @Max(100) Integer pageSize,
-            @Parameter(description = "Sort by field (id, title)", example = "id") @RequestParam(
-                    value = "sortBy",
-                    required = false,
-                    defaultValue = "id"
-            ) String sortBy,
-            @Parameter(description = "Sort direction (ASC/DESC)", example = "ASC") @RequestParam(
-                    value = "sortDir",
-                    required = false,
-                    defaultValue = "ASC"
-            ) @Pattern(regexp = "ASC|DESC", flags = Pattern.Flag.CASE_INSENSITIVE) String sortDir
-    ) {
-        return ResponseEntity
-                .ok()
-                /*.cacheControl(CacheControl.maxAge(30, TimeUnit.SECONDS))*/
-                .body(
-                        new APIResponse(
-                                true,
-                                StatusCode.OK,
-                                "Retrieved all books successfully",
-                                bookService.readAll(offset, pageSize, sortBy, sortDir)
-                        )
-                );
+  @Operation(
+    summary = "Find All Books REST API",
+    description = "REST API to find all books with pagination and sorting options"
+  )
+  @ApiResponses(
+    {
+      @ApiResponse(
+        responseCode = "200",
+        description = "HTTP Status OK",
+        content = @Content(
+          mediaType = "application/json",
+          schema = @Schema(implementation = APIResponse.class)
+        )
+      ),
+      @ApiResponse(
+        responseCode = "400",
+        description = "Invalid request parameters or body",
+        content = @Content(
+          mediaType = "application/json",
+          schema = @Schema(implementation = ErrorInfo.class)
+        )
+      ),
+      @ApiResponse(
+        responseCode = "401",
+        description = "Unauthorized",
+        content = @Content(
+          mediaType = "application/json",
+          schema = @Schema(implementation = ErrorInfo.class)
+        )
+      ),
+      @ApiResponse(
+        responseCode = "403",
+        description = "Forbidden",
+        content = @Content(
+          mediaType = "application/json",
+          schema = @Schema(implementation = ErrorInfo.class)
+        )
+      ),
+      @ApiResponse(
+        responseCode = "405",
+        description = "This http method is not allowed for this API endpoint",
+        content = @Content(
+          mediaType = "application/json",
+          schema = @Schema(implementation = ErrorInfo.class)
+        )
+      ),
+      @ApiResponse(
+        responseCode = "500",
+        description = "HTTP Status Internal Server Error",
+        content = @Content(
+          mediaType = "application/json",
+          schema = @Schema(implementation = ErrorInfo.class)
+        )
+      ),
     }
+  )
+  @GetMapping
+  public ResponseEntity<APIResponse> findAllBooks(
+    @Parameter(description = "Zero-based offset index", example = "0") @RequestParam(
+      value = "offset",
+      required = false,
+      defaultValue = "0"
+    ) @Min(0) Integer offset,
+    @Parameter(
+      description = "Number of items per page (1-100)",
+      example = "10"
+    ) @RequestParam(value = "pageSize", required = false, defaultValue = "10") @Min(
+      1
+    ) @Max(100) Integer pageSize,
+    @Parameter(description = "Sort by field (id, title)", example = "id") @RequestParam(
+      value = "sortBy",
+      required = false,
+      defaultValue = "id"
+    ) String sortBy,
+    @Parameter(description = "Sort direction (ASC/DESC)", example = "ASC") @RequestParam(
+      value = "sortDir",
+      required = false,
+      defaultValue = "ASC"
+    ) @Pattern(regexp = "ASC|DESC", flags = Pattern.Flag.CASE_INSENSITIVE) String sortDir
+  ) {
+    return ResponseEntity
+      .ok()
+      /*.cacheControl(CacheControl.maxAge(30, TimeUnit.SECONDS))*/
+      .body(
+        new APIResponse(
+          true,
+          StatusCode.OK,
+          "Retrieved all books successfully",
+          bookService.readAll(offset, pageSize, sortBy, sortDir)
+        )
+      );
+  }
 
-    @Operation(
-            summary = "Find Book By BookId REST API",
-            description = "REST API to find book by bookId"
-    )
-    @ApiResponses({
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "HTTP Status OK",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = APIResponse.class)
-                    )
-            ),
-            @ApiResponse(
-                    responseCode = "400",
-                    description = "Invalid request parameters or body",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = ErrorInfo.class)
-                    )
-            ),
-            @ApiResponse(
-                    responseCode = "401",
-                    description = "Unauthorized",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = ErrorInfo.class)
-                    )
-            ),
-            @ApiResponse(
-                    responseCode = "403",
-                    description = "Forbidden",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = ErrorInfo.class)
-                    )
-            ),
-            @ApiResponse(
-                    responseCode = "404",
-                    description = "Book not found",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = ErrorInfo.class)
-                    )
-            ),
-            @ApiResponse(
-                    responseCode = "405",
-                    description = "This http method is not allowed for this API endpoint",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = ErrorInfo.class)
-                    )
-            ),
-            @ApiResponse(
-                    responseCode = "500",
-                    description = "HTTP Status Internal Server Error",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = ErrorInfo.class)
-                    )
-            ),
-    })
-    @GetMapping("/{bookId}")
-    public ResponseEntity<APIResponse> findBookById(@PathVariable Long bookId) {
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(
-                        new APIResponse(
-                                true,
-                                StatusCode.OK,
-                                "Retrieved book successfully",
-                                bookService.readById(bookId)
-                        )
-                );
+  @Operation(
+    summary = "Find Book By BookId REST API",
+    description = "REST API to find book by bookId"
+  )
+  @ApiResponses(
+    {
+      @ApiResponse(
+        responseCode = "200",
+        description = "HTTP Status OK",
+        content = @Content(
+          mediaType = "application/json",
+          schema = @Schema(implementation = APIResponse.class)
+        )
+      ),
+      @ApiResponse(
+        responseCode = "400",
+        description = "Invalid request parameters or body",
+        content = @Content(
+          mediaType = "application/json",
+          schema = @Schema(implementation = ErrorInfo.class)
+        )
+      ),
+      @ApiResponse(
+        responseCode = "401",
+        description = "Unauthorized",
+        content = @Content(
+          mediaType = "application/json",
+          schema = @Schema(implementation = ErrorInfo.class)
+        )
+      ),
+      @ApiResponse(
+        responseCode = "403",
+        description = "Forbidden",
+        content = @Content(
+          mediaType = "application/json",
+          schema = @Schema(implementation = ErrorInfo.class)
+        )
+      ),
+      @ApiResponse(
+        responseCode = "404",
+        description = "Book not found",
+        content = @Content(
+          mediaType = "application/json",
+          schema = @Schema(implementation = ErrorInfo.class)
+        )
+      ),
+      @ApiResponse(
+        responseCode = "405",
+        description = "This http method is not allowed for this API endpoint",
+        content = @Content(
+          mediaType = "application/json",
+          schema = @Schema(implementation = ErrorInfo.class)
+        )
+      ),
+      @ApiResponse(
+        responseCode = "500",
+        description = "HTTP Status Internal Server Error",
+        content = @Content(
+          mediaType = "application/json",
+          schema = @Schema(implementation = ErrorInfo.class)
+        )
+      ),
     }
+  )
+  @GetMapping("/{bookId}")
+  public ResponseEntity<APIResponse> findBookById(@PathVariable Long bookId) {
+    return ResponseEntity
+      .status(HttpStatus.OK)
+      .body(
+        new APIResponse(
+          true,
+          StatusCode.OK,
+          "Retrieved book successfully",
+          bookService.readById(bookId)
+        )
+      );
+  }
 
-    @Operation(
-            summary = "Create Book REST API",
-            description = "REST API to create a new book"
-    )
-    @ApiResponses({
-            @ApiResponse(
-                    responseCode = "201",
-                    description = "HTTP Status Created",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = APIResponse.class)
-                    )
-            ),
-            @ApiResponse(
-                    responseCode = "400",
-                    description = "Invalid request parameters or body",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = ErrorInfo.class)
-                    )
-            ),
-            @ApiResponse(
-                    responseCode = "401",
-                    description = "Unauthorized",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = ErrorInfo.class)
-                    )
-            ),
-            @ApiResponse(
-                    responseCode = "403",
-                    description = "Forbidden",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = ErrorInfo.class)
-                    )
-            ),
-            @ApiResponse(
-                    responseCode = "405",
-                    description = "This http method is not allowed for this API endpoint",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = ErrorInfo.class)
-                    )
-            ),
-            @ApiResponse(
-                    responseCode = "500",
-                    description = "HTTP Status Internal Server Error",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = ErrorInfo.class)
-                    )
-            ),
-    })
-    @PostMapping
-    public ResponseEntity<APIResponse> createBook(
-            @Valid @RequestBody BookCreationDto bookCreationDto
-    ) {
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(
-                        new APIResponse(
-                                true,
-                                StatusCode.CREATED,
-                                "Book created successfully",
-                                bookService.create(bookCreationDto)
-                        )
-                );
+  @Operation(
+    summary = "Create Book REST API",
+    description = "REST API to create a new book"
+  )
+  @ApiResponses(
+    {
+      @ApiResponse(
+        responseCode = "201",
+        description = "HTTP Status Created",
+        content = @Content(
+          mediaType = "application/json",
+          schema = @Schema(implementation = APIResponse.class)
+        )
+      ),
+      @ApiResponse(
+        responseCode = "400",
+        description = "Invalid request parameters or body",
+        content = @Content(
+          mediaType = "application/json",
+          schema = @Schema(implementation = ErrorInfo.class)
+        )
+      ),
+      @ApiResponse(
+        responseCode = "401",
+        description = "Unauthorized",
+        content = @Content(
+          mediaType = "application/json",
+          schema = @Schema(implementation = ErrorInfo.class)
+        )
+      ),
+      @ApiResponse(
+        responseCode = "403",
+        description = "Forbidden",
+        content = @Content(
+          mediaType = "application/json",
+          schema = @Schema(implementation = ErrorInfo.class)
+        )
+      ),
+      @ApiResponse(
+        responseCode = "405",
+        description = "This http method is not allowed for this API endpoint",
+        content = @Content(
+          mediaType = "application/json",
+          schema = @Schema(implementation = ErrorInfo.class)
+        )
+      ),
+      @ApiResponse(
+        responseCode = "500",
+        description = "HTTP Status Internal Server Error",
+        content = @Content(
+          mediaType = "application/json",
+          schema = @Schema(implementation = ErrorInfo.class)
+        )
+      ),
     }
+  )
+  @PostMapping
+  public ResponseEntity<APIResponse> createBook(
+    @Valid @RequestBody BookCreationDto bookCreationDto
+  ) {
+    return ResponseEntity
+      .status(HttpStatus.CREATED)
+      .body(
+        new APIResponse(
+          true,
+          StatusCode.CREATED,
+          "Book created successfully",
+          bookService.create(bookCreationDto)
+        )
+      );
+  }
 
-    @Operation(
-            summary = "Update Book REST API",
-            description = "REST API to update an existing book"
-    )
-    @ApiResponses({
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "HTTP Status OK",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = APIResponse.class)
-                    )
-            ),
-            @ApiResponse(
-                    responseCode = "400",
-                    description = "Invalid request parameters or body",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = ErrorInfo.class)
-                    )
-            ),
-            @ApiResponse(
-                    responseCode = "401",
-                    description = "Unauthorized",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = ErrorInfo.class)
-                    )
-            ),
-            @ApiResponse(
-                    responseCode = "403",
-                    description = "Forbidden",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = ErrorInfo.class)
-                    )
-            ),
-            @ApiResponse(
-                    responseCode = "404",
-                    description = "Book not found",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = ErrorInfo.class)
-                    )
-            ),
-            @ApiResponse(
-                    responseCode = "405",
-                    description = "This http method is not allowed for this API endpoint",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = ErrorInfo.class)
-                    )
-            ),
-            @ApiResponse(
-                    responseCode = "500",
-                    description = "HTTP Status Internal Server Error",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = ErrorInfo.class)
-                    )
-            ),
-    })
-    @PutMapping("/{bookId}")
-    public ResponseEntity<APIResponse> updateBook(
-            @PathVariable Long bookId,
-            @Valid @RequestBody BookUpdateDto bookUpdateDto
-    ) {
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(
-                        new APIResponse(
-                                true,
-                                StatusCode.OK,
-                                "Book updated successfully",
-                                bookService.update(bookId, bookUpdateDto)
-                        )
-                );
+  @Operation(
+    summary = "Update Book REST API",
+    description = "REST API to update an existing book"
+  )
+  @ApiResponses(
+    {
+      @ApiResponse(
+        responseCode = "200",
+        description = "HTTP Status OK",
+        content = @Content(
+          mediaType = "application/json",
+          schema = @Schema(implementation = APIResponse.class)
+        )
+      ),
+      @ApiResponse(
+        responseCode = "400",
+        description = "Invalid request parameters or body",
+        content = @Content(
+          mediaType = "application/json",
+          schema = @Schema(implementation = ErrorInfo.class)
+        )
+      ),
+      @ApiResponse(
+        responseCode = "401",
+        description = "Unauthorized",
+        content = @Content(
+          mediaType = "application/json",
+          schema = @Schema(implementation = ErrorInfo.class)
+        )
+      ),
+      @ApiResponse(
+        responseCode = "403",
+        description = "Forbidden",
+        content = @Content(
+          mediaType = "application/json",
+          schema = @Schema(implementation = ErrorInfo.class)
+        )
+      ),
+      @ApiResponse(
+        responseCode = "404",
+        description = "Book not found",
+        content = @Content(
+          mediaType = "application/json",
+          schema = @Schema(implementation = ErrorInfo.class)
+        )
+      ),
+      @ApiResponse(
+        responseCode = "405",
+        description = "This http method is not allowed for this API endpoint",
+        content = @Content(
+          mediaType = "application/json",
+          schema = @Schema(implementation = ErrorInfo.class)
+        )
+      ),
+      @ApiResponse(
+        responseCode = "500",
+        description = "HTTP Status Internal Server Error",
+        content = @Content(
+          mediaType = "application/json",
+          schema = @Schema(implementation = ErrorInfo.class)
+        )
+      ),
     }
+  )
+  @PutMapping("/{bookId}")
+  public ResponseEntity<APIResponse> updateBook(
+    @PathVariable Long bookId,
+    @Valid @RequestBody BookUpdateDto bookUpdateDto
+  ) {
+    return ResponseEntity
+      .status(HttpStatus.OK)
+      .body(
+        new APIResponse(
+          true,
+          StatusCode.OK,
+          "Book updated successfully",
+          bookService.update(bookId, bookUpdateDto)
+        )
+      );
+  }
 
-    @Operation(
-            summary = "Delete Book REST API",
-            description = "REST API to delete an existing book"
-    )
-    @ApiResponses({
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "HTTP Status OK",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = APIResponse.class)
-                    )
-            ),
-            @ApiResponse(
-                    responseCode = "401",
-                    description = "Unauthorized",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = ErrorInfo.class)
-                    )
-            ),
-            @ApiResponse(
-                    responseCode = "403",
-                    description = "Forbidden",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = ErrorInfo.class)
-                    )
-            ),
-            @ApiResponse(
-                    responseCode = "404",
-                    description = "Book not found",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = ErrorInfo.class)
-                    )
-            ),
-            @ApiResponse(
-                    responseCode = "405",
-                    description = "This http method is not allowed for this API endpoint",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = ErrorInfo.class)
-                    )
-            ),
-            @ApiResponse(
-                    responseCode = "500",
-                    description = "HTTP Status Internal Server Error",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = ErrorInfo.class)
-                    )
-            ),
-    })
-    @DeleteMapping("/{bookId}")
-    public ResponseEntity<APIResponse> deleteBook(@PathVariable Long bookId) {
-        bookService.delete(bookId);
-        return ResponseEntity
-                .status(HttpStatus.NO_CONTENT)
-                .body(new APIResponse(true, StatusCode.NO_CONTENT, "Book deleted successfully"));
+  @Operation(
+    summary = "Delete Book REST API",
+    description = "REST API to delete an existing book"
+  )
+  @ApiResponses(
+    {
+      @ApiResponse(
+        responseCode = "200",
+        description = "HTTP Status OK",
+        content = @Content(
+          mediaType = "application/json",
+          schema = @Schema(implementation = APIResponse.class)
+        )
+      ),
+      @ApiResponse(
+        responseCode = "401",
+        description = "Unauthorized",
+        content = @Content(
+          mediaType = "application/json",
+          schema = @Schema(implementation = ErrorInfo.class)
+        )
+      ),
+      @ApiResponse(
+        responseCode = "403",
+        description = "Forbidden",
+        content = @Content(
+          mediaType = "application/json",
+          schema = @Schema(implementation = ErrorInfo.class)
+        )
+      ),
+      @ApiResponse(
+        responseCode = "404",
+        description = "Book not found",
+        content = @Content(
+          mediaType = "application/json",
+          schema = @Schema(implementation = ErrorInfo.class)
+        )
+      ),
+      @ApiResponse(
+        responseCode = "405",
+        description = "This http method is not allowed for this API endpoint",
+        content = @Content(
+          mediaType = "application/json",
+          schema = @Schema(implementation = ErrorInfo.class)
+        )
+      ),
+      @ApiResponse(
+        responseCode = "500",
+        description = "HTTP Status Internal Server Error",
+        content = @Content(
+          mediaType = "application/json",
+          schema = @Schema(implementation = ErrorInfo.class)
+        )
+      ),
     }
+  )
+  @DeleteMapping("/{bookId}")
+  public ResponseEntity<APIResponse> deleteBook(@PathVariable Long bookId) {
+    bookService.delete(bookId);
+    return ResponseEntity
+      .status(HttpStatus.NO_CONTENT)
+      .body(new APIResponse(true, StatusCode.NO_CONTENT, "Book deleted successfully"));
+  }
 }

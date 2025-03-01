@@ -6,7 +6,6 @@ import com.devcambo.springinit.model.dto.response.OrderResponseDto;
 import org.springframework.data.domain.Page;
 
 public interface OrderService {
-
   /**
    * Retrieves a paginated list of all orders.
    *

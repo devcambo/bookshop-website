@@ -13,14 +13,8 @@ import org.mapstruct.Mappings;
 public interface OrderItemMapper {
   OrderItemResponseDto toDto(OrderItem orderItem);
 
-
   OrderItem toEntity(OrderItemCreationDto orderItemCreationDto);
 
-  @Mappings(
-    {
-      @Mapping(target = "id", ignore = true),
-    }
-  )
+  @Mappings({ @Mapping(target = "id", ignore = true) })
   void updateFromDto(OrderItemUpdateDto dto, @MappingTarget OrderItem entity);
-
 }

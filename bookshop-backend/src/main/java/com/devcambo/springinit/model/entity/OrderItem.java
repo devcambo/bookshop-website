@@ -26,5 +26,4 @@ public class OrderItem {
 
   @Column(name = "quantity")
   private Integer quantity;
-
 }

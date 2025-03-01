@@ -30,6 +30,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 
 @ExtendWith(MockitoExtension.class)
@@ -38,6 +39,9 @@ class UserServiceImplTest {
 
   @Mock
   UserRepo userRepository;
+
+  @Mock
+  PasswordEncoder encoder;
 
   @Spy
   UserMapperImpl userMapperImpl;
@@ -66,7 +70,8 @@ class UserServiceImplTest {
         "example@example.com",
         "password",
         Gender.MALE,
-        "ADMIN,USER"
+        "ADMIN,USER",
+        null
       );
     userId = userExample.getUserId();
     userCreationDtoExample =
@@ -79,14 +84,21 @@ class UserServiceImplTest {
     userUpdateDtoExample =
       new UserUpdateDto("Update Example", "update@example.com", Gender.MALE);
     userResponseDtoExample =
-      new UserResponseDto(3L, "Response Example", "response@example.com", Gender.MALE);
+      new UserResponseDto(
+        3L,
+        "Response Example",
+        "response@example.com",
+        "USER",
+        Gender.MALE
+      );
     User u1 = new User(
       1L,
       "John Doe",
       "7sCm6@example.com",
       "password",
       Gender.MALE,
-      "ADMIN,USER"
+      "ADMIN,USER",
+      null
     );
     User u2 = new User(
       2L,
@@ -94,7 +106,8 @@ class UserServiceImplTest {
       "oUw0X@example.com",
       "password",
       Gender.FEMALE,
-      "ADMIN,USER"
+      "ADMIN,USER",
+      null
     );
     users = Arrays.asList(u1, u2);
   }

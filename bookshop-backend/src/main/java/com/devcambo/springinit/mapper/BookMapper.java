@@ -11,15 +11,10 @@ import org.mapstruct.Mappings;
 
 @Mapper(componentModel = "spring")
 public interface BookMapper {
-
   BookResponseDto toDto(Book book);
 
   Book toEntity(BookCreationDto bookCreationDto);
 
-  @Mappings(
-    {
-      @Mapping(target = "id", ignore = true),
-    }
-  )
+  @Mappings({ @Mapping(target = "id", ignore = true) })
   void updateFromDto(BookUpdateDto dto, @MappingTarget Book entity);
 }

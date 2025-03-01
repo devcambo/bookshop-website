@@ -59,7 +59,10 @@ public class OrderItemServiceImpl implements OrderItemService {
   }
 
   @Override
-  public OrderItemResponseDto update(Long orderItemId, OrderItemUpdateDto orderItemUpdateDto) {
+  public OrderItemResponseDto update(
+    Long orderItemId,
+    OrderItemUpdateDto orderItemUpdateDto
+  ) {
     OrderItem existingOrderItem = getOrderItemById(orderItemId);
     orderItemMapper.updateFromDto(orderItemUpdateDto, existingOrderItem);
     OrderItem savedOrderItem = orderItemRepo.save(existingOrderItem);
@@ -79,6 +82,8 @@ public class OrderItemServiceImpl implements OrderItemService {
   }
 
   private boolean isValidSortField(String field) {
-    return Arrays.asList("orderItemId", "orderId", "productId", "quantity").contains(field);
+    return Arrays
+      .asList("orderItemId", "orderId", "productId", "quantity")
+      .contains(field);
   }
 }

@@ -430,9 +430,16 @@ public class UserController {
   }
 
   @GetMapping("/profile")
-    public ResponseEntity<APIResponse> findUserProfile(Authentication authentication) {
-      return ResponseEntity
-              .status(HttpStatus.OK)
-              .body(new APIResponse(true, StatusCode.OK, "Retrieved profile successfully",  userService.profile(authentication.getName())));
+  public ResponseEntity<APIResponse> findUserProfile(Authentication authentication) {
+    return ResponseEntity
+      .status(HttpStatus.OK)
+      .body(
+        new APIResponse(
+          true,
+          StatusCode.OK,
+          "Retrieved profile successfully",
+          userService.profile(authentication.getName())
+        )
+      );
   }
 }

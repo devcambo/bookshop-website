@@ -12,7 +12,6 @@ import org.mapstruct.Mappings;
 
 @Mapper(componentModel = "spring")
 public interface UserMapper {
-
   UserResponseDto toDto(User user);
 
   User toEntity(UserCreationDto userCreationDto);
@@ -20,7 +19,7 @@ public interface UserMapper {
   @Mappings(
     {
       @Mapping(target = "userId", ignore = true),
-            @Mapping(target = "roles", ignore = true),
+      @Mapping(target = "roles", ignore = true),
       @Mapping(target = "password", ignore = true),
     }
   )

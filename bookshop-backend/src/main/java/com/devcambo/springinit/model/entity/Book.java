@@ -1,10 +1,9 @@
 package com.devcambo.springinit.model.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
-
 import java.math.BigDecimal;
 import java.sql.Date;
+import lombok.*;
 
 @Setter
 @Getter
@@ -42,5 +41,4 @@ public class Book {
 
   @Column(name = "image_url", length = 500)
   private String imageUrl;
-
 }

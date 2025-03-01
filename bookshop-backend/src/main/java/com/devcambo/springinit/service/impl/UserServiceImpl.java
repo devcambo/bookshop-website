@@ -78,8 +78,9 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public UserResponseDto profile(String email) {
-    User user = userRepo.findByEmail(email)
-            .orElseThrow(() -> new ResourceNotFoundException("profile", email));
+    User user = userRepo
+      .findByEmail(email)
+      .orElseThrow(() -> new ResourceNotFoundException("profile", email));
     return userMapper.toDto(user);
   }
 

@@ -54,5 +54,5 @@ public interface UserService {
    */
   void delete(Long userId);
 
-    UserResponseDto profile(String email);
+  UserResponseDto profile(String email);
 }
