@@ -46,7 +46,7 @@ public class SecurityConfig {
           .requestMatchers(HttpMethod.GET, "/api/books/**")
           .permitAll()
           .requestMatchers("/api/buckets/**")
-          .hasAuthority("SUPER_ADMIN")
+          .hasAuthority("USER")
           .anyRequest()
           .authenticated()
       )

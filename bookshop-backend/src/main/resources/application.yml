@@ -4,7 +4,7 @@ spring:
   application:
     name: "book-shop-website"
   profiles:
-    active: "prod"
+    active: "dev"
   web:
     resources:
       add-mappings: "false"
